@@ -3,6 +3,7 @@
 from rest_framework import viewsets, permissions
 from .models import Listing, Booking, Review
 from .serializers import ListingSerializer, BookingSerializer, ReviewSerializer
+from .tasks import send_email
 
 class ListingViewSet(viewsets.ModelViewSet):
     queryset = Listing.objects.all()
@@ -16,6 +17,7 @@ class BookingViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def perform_create(self, serializer):
+        send_email.delay("HElLLO YOU JUST BOOKED STH")
         serializer.save(user=self.request.user)
 
 

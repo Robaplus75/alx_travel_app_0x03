@@ -4,6 +4,7 @@ import environ
 
 # ENV VARIABLES NEEDED:
 #   'DJANGO_SECRET_KEY'
+#   'CELERY_BROKER_URL'
 #   'DATABASE_URL':
 #       POSTGRESQL: DATABASE_URL =  'postgres://USER:PASSWORD@HOST:PORT/NAME'
 #       MYSQL: DATABASE_URL      =  'mysql://username:password@localhost:3306/mydatabase'
@@ -40,6 +41,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'corsheaders',
     'listings',
+    'celery',
 ]
 
 MIDDLEWARE = [
@@ -110,3 +112,10 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# Celery Configurations
+
+CELERY_BROKER_URL = env('CELERY_BROKER_URL', default='amqp://robel:123@localhost:5672/development')
+
+
