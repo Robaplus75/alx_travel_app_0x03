@@ -1,8 +1,14 @@
 # listings/views.py
 
 from rest_framework import viewsets, permissions
-from .serializers import ListingSerializer, BookingSerializer, ReviewSerializer
 from .models import Listing, Booking, Review
+from .serializers import ListingSerializer, BookingSerializer, ReviewSerializer
+from .tasks import send_email
+
+class ListingViewSet(viewsets.ModelViewSet):
+    queryset = Listing.objects.all()
+    serializer_class = ListingSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
 class BookingViewSet(viewsets.ModelViewSet):
@@ -11,6 +17,7 @@ class BookingViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def perform_create(self, serializer):
+        send_email.delay("HElLLO YOU JUST BOOKED STH")
         serializer.save(user=self.request.user)
 
 
@@ -21,10 +28,3 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
-
-class ListingViewSet(viewsets.ModelViewSet):
-    queryset = Listing.objects.all()
-    serializer_class = ListingSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-
-
